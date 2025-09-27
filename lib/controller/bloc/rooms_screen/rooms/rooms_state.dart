@@ -1,3 +1,5 @@
+import 'package:cocoon_hotelside/model/room_model.dart';
+
 abstract class RoomsState {}
 
 class RoomsInitial extends RoomsState {}
@@ -5,7 +7,7 @@ class RoomsInitial extends RoomsState {}
 class RoomsLoading extends RoomsState {}
 
 class RoomsLoaded extends RoomsState {
-  final List<Map<String, dynamic>> rooms;
+  final List<Room> rooms;
   RoomsLoaded(this.rooms);
 }
 

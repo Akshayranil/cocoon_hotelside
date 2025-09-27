@@ -1,81 +1,104 @@
 import 'dart:io';
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomimages/roomimages_bloc.dart';
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomimages/roomimages_event.dart';
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomimages/roomimages_state.dart';
-import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/rooms/screen_rooms.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_bloc.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
+import 'package:cocoon_hotelside/utilities/custom_claudinary.dart';
+import 'package:cocoon_hotelside/utilities/customnavigationscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RoomImagesScreen extends StatelessWidget {
-  const RoomImagesScreen({super.key});
-  final hotelId = "your_saved_hotel_id";
-  Future<List<File>> pickImages() async {
-    final pickedList = await ImagePicker().pickMultiImage();
-    return pickedList.map((xfile) => File(xfile.path)).toList();
-  }
+  final String hotelId;
+  final String roomId;
+
+  const RoomImagesScreen({
+    super.key,
+    required this.hotelId,
+    required this.roomId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => RoomImagesBloc()..add(LoadRoomImages()),
-      child: Scaffold(
-        appBar: AppBar(title: const Text("Room Images")),
-        body: BlocBuilder<RoomImagesBloc, RoomImagesState>(
+    return Scaffold(
+      appBar: AppBar(title: const Text("Room Images")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: BlocBuilder<AddpropertiesBloc, AddpropertiesState>(
           builder: (context, state) {
-            if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+            return state.room.images.isEmpty
+                ? const Center(child: Text("No images added yet"))
+                : ListView.builder(
+                    itemCount: state.room.images.length,
+                    itemBuilder: (context, index) {
+                      final imageUrl = state.room.images[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        child: ListTile(
+                          leading: Image.network(
+                            imageUrl,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text("Image ${index + 1}"),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              context.read<AddpropertiesBloc>().add(
+                                RemoveImage(imageUrl),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  );
+          },
+        ),
+      ),
 
-            if (state.imageUrls.isEmpty) {
-              return const Center(child: Text("Upload images here"));
-            }
+floatingActionButton: FloatingActionButton(
+  onPressed: () async {
+    final hotelbloc = context.read<AddpropertiesBloc>();
+    final picker = ImagePicker();
+    final pickedFiles = await picker.pickMultiImage();
 
-            return GridView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: state.imageUrls.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              itemBuilder: (context, index) {
-                return Image.network(state.imageUrls[index], fit: BoxFit.cover);
-              },
+    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+      // Upload each image one by one and add to Bloc
+      for (var file in pickedFiles) {
+        final fileUrl = await roomimageuploadToCloudinary(File(file.path));
+        if (fileUrl != null) {
+          hotelbloc.add(AddImage(fileUrl)); // Add each uploaded image URL
+        }
+      }
+    }
+  },
+  child: const Icon(Icons.add_a_photo),
+),
+
+
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ElevatedButton(
+          onPressed: () async {
+            final state = context.read<AddpropertiesBloc>().state;
+
+            await FirebaseFirestore.instance
+                .collection('hotelregistration')
+                .doc(hotelId)
+                .collection('rooms')
+                .doc(roomId)
+                .set(state.room.toMap());
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => CustomNavigationscreen()),
             );
           },
-        ),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: AppColor.secondary,
-          backgroundColor: AppColor.primary,
-          onPressed: () async {
-            final files = await pickImages(); // now returns multiple images
-            if (files.isNotEmpty) {
-              for (var file in files) {
-                context.read<RoomImagesBloc>().add(UploadRoomImage(file));
-              }
-            }
-          },
-          child: const Icon(Icons.upload),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RoomsScreen(hotelId: hotelId),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              foregroundColor: AppColor.ternary,
-              backgroundColor: AppColor.primary,
-            ),
-            child: Text('Save Uploads'),
-          ),
+
+          child: const Text("Finish"),
         ),
       ),
     );

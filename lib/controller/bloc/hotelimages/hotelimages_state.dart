@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 
-class RoomImagesState extends Equatable {
-  final List<String> imageUrls; // Firebase URLs
+class HotelImagesState extends Equatable {
+  final List<String> imageUrls;
   final bool isLoading;
 
-  const RoomImagesState({
+  const HotelImagesState({
     this.imageUrls = const [],
     this.isLoading = false,
   });
 
-  RoomImagesState copyWith({
+  HotelImagesState copyWith({
     List<String>? imageUrls,
     bool? isLoading,
   }) {
-    return RoomImagesState(
+    return HotelImagesState(
       imageUrls: imageUrls ?? this.imageUrls,
       isLoading: isLoading ?? this.isLoading,
     );

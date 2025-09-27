@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,6 +17,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> onlogin(AuthLogin event, Emitter<AuthState> emit) async {
+    log('Email : ${event.email}');
+    log('Password : ${event.password}');
     emit(AuthLoading());
     try {
       await auth.signInWithEmailAndPassword(
@@ -30,10 +34,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> onsignup(AuthSignUp event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      await auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: event.email,
         password: event.password,
       );
+      String hotelId = userCredential.user!.uid;
       emit(AuthInitial());
     } on FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Signed Up Failed'));

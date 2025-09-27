@@ -1,7 +1,7 @@
 abstract class AddpropertiesEvent {}
 
 class UpdateRoomArea extends AddpropertiesEvent {
-  final String area;
+  final int area;
   UpdateRoomArea(this.area);
 }
 
@@ -11,25 +11,49 @@ class UpdateAccommodationType extends AddpropertiesEvent {
 }
 
 class UpdatePropertySize extends AddpropertiesEvent {
-  final String size;
+  final int size;
   UpdatePropertySize(this.size);
 }
 
 class UpdateExtraBedType extends AddpropertiesEvent {
-  final String bedType;
-  UpdateExtraBedType(this.bedType);
+  final String extraBedType;
+  UpdateExtraBedType(this.extraBedType);
 }
 
 class UpdateRoomPrice extends AddpropertiesEvent {
-  final String roomPrice;
+  final int roomPrice;
   UpdateRoomPrice(this.roomPrice);
 }
 
-class UpdatedExtraPersons extends AddpropertiesEvent {
-  final String extraPersons;
-  UpdatedExtraPersons(this.extraPersons);
+class UpdateExtraPersons extends AddpropertiesEvent {
+  final int extraPersons;
+  UpdateExtraPersons(this.extraPersons);
 }
 
 
+class SubmitRoomDetailForm extends AddpropertiesEvent {
 
-class SubmitRoomForm extends AddpropertiesEvent {}
+}
+
+class AddAmenity extends AddpropertiesEvent {
+  final String amenity;
+  AddAmenity(this.amenity);
+}
+
+class RemoveAmenity extends AddpropertiesEvent {
+  final String amenity;
+  RemoveAmenity(this.amenity);
+}
+
+
+class AddImage extends AddpropertiesEvent {
+  final String imageUrl;
+  AddImage(this.imageUrl);
+}
+
+class RemoveImage extends AddpropertiesEvent {
+  final String imageUrl;
+  RemoveImage(this.imageUrl);
+}
+
+

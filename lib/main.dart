@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/controller/bloc/auth/auth_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/checkbox/checkbox_bloc.dart';
+import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_bloc.dart';
+import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/property/property_bloc.dart';
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/aminities/aminities_bloc.dart';
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/selection/selection_cubit.dart';
 import 'package:cocoon_hotelside/firebase_options.dart';
@@ -13,10 +13,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
-    Firebase.initializeApp(
+  await  Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform
     );
   
@@ -38,8 +38,8 @@ class MyApp extends StatelessWidget {
          BlocProvider<PropertyBloc>(create: (_)=>PropertyBloc()),
          BlocProvider<HotelregistrationBloc>(create: (_)=>HotelregistrationBloc()),
          BlocProvider<RoomsBloc>(create: (_)=>RoomsBloc(FirebaseFirestore.instance)),
-         BlocProvider<AddpropertiesBloc>(create: (_)=>AddpropertiesBloc()),
-         BlocProvider<AminitiesBloc>(create: (_)=>AminitiesBloc())
+         BlocProvider<HotelImagesBloc>(create: (_) => HotelImagesBloc()..add(LoadHotelImages()),),
+         
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

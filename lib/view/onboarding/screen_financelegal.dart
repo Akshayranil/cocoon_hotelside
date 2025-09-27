@@ -7,6 +7,7 @@ import 'package:cocoon_hotelside/controller/bloc/property/property_state.dart';
 import 'package:cocoon_hotelside/utilities/custom_claudinary.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
 import 'package:cocoon_hotelside/view/onboarding/screen_finalverification.dart';
+import 'package:cocoon_hotelside/view/onboarding/screen_propertyimages.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -217,7 +218,7 @@ class FinanceandPolicy extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => FinalVerificationScreen(),
+                builder: (context) => HotelImagesScreen(),
               ),
             );
           },

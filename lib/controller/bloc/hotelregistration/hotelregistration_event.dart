@@ -40,6 +40,12 @@ class UpdatedFacilities extends HotelregistrationEvent {
   UpdatedFacilities(this.facilities);
 }
 
+class UpdatedHotelImages extends HotelregistrationEvent {
+  final List<String> hotelimages;
+
+  UpdatedHotelImages(this.hotelimages);
+}
+
 class UpdatedPan extends HotelregistrationEvent {
   final String pan;
 

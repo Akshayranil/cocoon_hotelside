@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_state.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
+import 'package:cocoon_hotelside/view/rooms/screen_addpropertiesflow.dart';
 import 'package:cocoon_hotelside/view/rooms/screen_addpropertydescription.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,28 +48,28 @@ class RoomsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          room["name"] ?? "Unnamed Room",
+                          room.roomId ?? "Unnamed Room",
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          "Type: ${room["type"] ?? "N/A"}",
+                          "Type: ${room.type ?? "N/A"}",
                           style: const TextStyle(
                               fontSize: 14, color: Colors.grey),
                         ),
-                        if (room["area"] != null) ...[
+                        if (room.area != null) ...[
                           const SizedBox(height: 8),
                           Text(
-                            "Area: ${room["area"]} sq.ft",
+                            "Area: ${room.area} sq.ft",
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.grey),
                           ),
                         ],
-                        if (room["price"] != null) ...[
+                        if (room.roomPrice != null) ...[
                           const SizedBox(height: 8),
                           Text(
-                            "Price: \$${room["price"]}",
+                            "Price: \$${room.roomPrice}",
                             style: const TextStyle(
                                 fontSize: 14, color: Colors.grey),
                           ),
@@ -84,17 +88,33 @@ class RoomsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.primary,
-        foregroundColor: AppColor.secondary ,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context)=>AddPropertyScreen())
-          );
-        },
+  backgroundColor: AppColor.primary,
+  foregroundColor: AppColor.secondary,
+  onPressed: () async{
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final roomId = FirebaseFirestore.instance
+        .collection('hotelregistration')
+        .doc(hotelId)
+        .collection('rooms')
+        .doc()
+        .id;
+
+  await  Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context)  => AddPropertyFlow(
+          hotelId:hotelId,
+          roomId: roomId,
+        ),
+          
         
-        child: const Icon(Icons.add),
       ),
+    );
+    context.read<RoomsBloc>().add(LoadRoomsEvent(hotelId));
+  },
+  child: const Icon(Icons.add),
+),
+
     );
   }
 }

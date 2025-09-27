@@ -15,7 +15,7 @@ class CustomNavbar extends StatelessWidget {
           child: TabBar(tabs: [
             Tab(icon: Icon(Icons.dashboard),text: 'DashBoard',),
             Tab(icon: Icon(Icons.bookmark_add_sharp),text: 'Booked',),
-            Tab(icon: Icon(Icons.star),text: 'Reviews',),
+            Tab(icon: Icon(Icons.meeting_room),text: 'Rooms',),
             Tab(icon: Icon(Icons.person),text: 'Profile',),
             
           ],
@@ -25,7 +25,7 @@ class CustomNavbar extends StatelessWidget {
           
         ),
         body: TabBarView(children: [
-
+             
         ]),
       ));
   }

@@ -251,7 +251,7 @@ class LoginScreen extends StatelessWidget {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => CustomNavbar(),
+                                builder: (context) => RegistrationScreen(),
                               ),
                             );
                           }
@@ -283,11 +283,13 @@ class LoginScreen extends StatelessWidget {
   Future<bool> login() async {
     final user = await GoogleSignIn().signIn();
     GoogleSignInAuthentication userAuth = await user!.authentication;
-    var credential = GoogleAuthProvider.credential(
+    final credential = GoogleAuthProvider.credential(
       idToken: userAuth.idToken,
       accessToken: userAuth.accessToken,
     );
-    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    UserCredential userCredential =  await FirebaseAuth.instance.signInWithCredential(credential);
+    String uid = userCredential.user!.uid;
     return FirebaseAuth.instance.currentUser != null;
   }
 }

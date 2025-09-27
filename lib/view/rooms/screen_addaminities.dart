@@ -1,103 +1,100 @@
-import 'package:cocoon_hotelside/controller/bloc/rooms_screen/aminities/aminities_bloc.dart';
-import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/rooms/screen_uploadimages.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_bloc.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
+import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
+import 'package:cocoon_hotelside/view/rooms/screen_uploadimagesflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
 class AmenitiesScreen extends StatelessWidget {
   final String hotelId;
-  AmenitiesScreen({super.key, required this.hotelId});
-  TextEditingController amenitycontroller = TextEditingController();
+  final String roomId;
+
+  const AmenitiesScreen({super.key, required this.hotelId, required this.roomId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<AminitiesBloc, AminitiesState>(
+      appBar: AppBar(title: const Text("Amenities")),
+      body: BlocBuilder<AddpropertiesBloc, AddpropertiesState>(
         builder: (context, state) {
-          if (state is LoadingAminityState) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is LoadedAminityState) {
-            if (state.aminities.isEmpty) {
-              return Center(child: Text('Add Aminities'));
-            }
-            return ListView.builder(
-              itemCount: state.aminities.length,
-              itemBuilder: (context, index) {
-                return ListTile(title: Text(state.aminities[index],style: TextStyle(),));
-              },
-            );
-          } else if (state is ErrorAminityState) {
-            return Center(child: Text('Error : ${state.message}'));
-          }
-          return Center(child: Text('Add aminities'));
+          return state.room.aminities.isEmpty
+              ? const Center(child: Text("No amenities added yet"))
+              : ListView.builder(
+                  itemCount: state.room.aminities.length,
+                  itemBuilder: (context, index) {
+                    final amenity = state.room.aminities[index];
+                    return ListTile(
+                      title: Text(amenity),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          context.read<AddpropertiesBloc>().add(RemoveAmenity(amenity));
+                        },
+                      ),
+                    );
+                  },
+                );
         },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Add Amenities'),
-                content: TextField(
-                  controller: amenitycontroller,
-                  decoration: InputDecoration(
-                    label: Text('Enter amenities'),
-                    hintText: 'eg:Free Wifi',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      String aminities = amenitycontroller.text.trim();
-                      if (aminities.isNotEmpty) {
-                        context.read<AminitiesBloc>().add(
-                          AddAminities(aminities, hotelId),
-                        );
-                      }
-                      Navigator.pop(context);
-                      amenitycontroller.clear();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: AppColor.ternary,
-                      backgroundColor: AppColor.primary,
-                    ),
-                    child: Text('Add'),
-                  ),
-                ],
-              );
-            },
-          );
+          _showAddAmenityDialog(context);
         },
-        foregroundColor: AppColor.secondary,
-        backgroundColor: AppColor.primary,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10),
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RoomImagesScreen()),
-            );
+  context,
+  MaterialPageRoute(
+    builder: (_) => BlocProvider.value(
+      value: context.read<AddpropertiesBloc>(), // reuse existing instance
+      child: RoomImagesFlow(
+        hotelId: hotelId,
+        roomId: context.read<AddpropertiesBloc>().state.room.roomId,
+      ),
+    ),
+  ),
+);
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColor.primary,
-            foregroundColor: AppColor.ternary,
-          ),
-          child: Text('Next'),
+          child: const Text("Next"),
         ),
+      ),
+    );
+  }
+
+  void _showAddAmenityDialog(BuildContext parentContext) {
+    final TextEditingController amenityController = TextEditingController();
+
+    showDialog(
+      context: parentContext,
+      builder: (dialogcontext) => AlertDialog(
+        title: const Text("Add Amenity"),
+        content: TextField(
+          controller: amenityController,
+          decoration: const InputDecoration(
+            hintText: "Enter amenity",
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogcontext),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final text = amenityController.text.trim();
+              if (text.isNotEmpty) {
+                parentContext.read<AddpropertiesBloc>().add(AddAmenity(text));
+                Navigator.pop(dialogcontext);
+              }
+            },
+            child: const Text("Add"),
+          ),
+        ],
       ),
     );
   }

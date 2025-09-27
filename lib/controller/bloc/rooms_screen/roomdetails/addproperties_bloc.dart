@@ -1,59 +1,69 @@
-import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddpropertiesBloc extends Bloc<AddpropertiesEvent, AddpropertiesState> {
-  AddpropertiesBloc() : super(const AddpropertiesState()) {
+  AddpropertiesBloc(String roomId) : super(AddpropertiesState.initial(roomId)) {
     on<UpdateRoomArea>((event, emit) {
-      emit(state.copyWith(area: event.area));
+      emit(state.copyWith(room: state.room.copyWith(area: event.area)));
     });
 
     on<UpdateAccommodationType>((event, emit) {
-      emit(state.copyWith(accommodationType: event.type));
+      emit(state.copyWith(room: state.room.copyWith(type: event.type)));
     });
 
     on<UpdatePropertySize>((event, emit) {
-      emit(state.copyWith(propertySize: event.size));
+      emit(state.copyWith(room: state.room.copyWith(size: event.size)));
     });
 
     on<UpdateExtraBedType>((event, emit) {
-      emit(state.copyWith(extraBedType: event.bedType));
+      emit(
+        state.copyWith(
+          room: state.room.copyWith(extraBedType: event.extraBedType),
+        ),
+      );
     });
 
     on<UpdateRoomPrice>((event, emit) {
-      emit(state.copyWith(roomPrice: event.roomPrice));
+      emit(
+        state.copyWith(room: state.room.copyWith(roomPrice: event.roomPrice)),
+      );
     });
 
-    on<UpdatedExtraPersons>((event, emit) {
-      emit(state.copyWith(extraPersons: event.extraPersons));
+    on<UpdateExtraPersons>((event, emit) {
+      emit(
+        state.copyWith(
+          room: state.room.copyWith(extraPersons: event.extraPersons),
+        ),
+      );
     });
 
-    on<SubmitRoomForm>((event, emit) async {
-      emit(state.copyWith(submitted: true));
-      try {
-        final firestore = FirebaseFirestore.instance;
-        await firestore
-            .collection('hotelregistration')
-            .doc(hotelId)
-            .collection('propertydetails')
-            .add({
-              'area':state.area,
-              'type':state.accommodationType,
-              'propertysize':state.propertySize,
-              'extrabedtype':state.extraBedType,
-              'roomprice':state.roomPrice,
-              'extrapersons':state.extraPersons,
-              'createdAt':FieldValue.serverTimestamp()
-
-            });
-        log('Property details added successfully');
-      } catch (e) {
-        log("Error in saving :$e");
-      }
+    on<SubmitRoomDetailForm>((event, emit) {
+      
     });
+
+    on<AddAmenity>((event, emit) {
+  final updatedAmenities = List<String>.from(state.room.aminities)..add(event.amenity);
+  emit(state.copyWith(room: state.room.copyWith(aminities: updatedAmenities)));
+});
+
+on<RemoveAmenity>((event, emit) {
+  final updatedAmenities = List<String>.from(state.room.aminities)..remove(event.amenity);
+  emit(state.copyWith(room: state.room.copyWith(aminities: updatedAmenities)));
+});
+
+on<AddImage>((event, emit) {
+  final updatedImages = List<String>.from(state.room.images)..add(event.imageUrl);
+  emit(state.copyWith(room: state.room.copyWith(images: updatedImages)));
+});
+
+on<RemoveImage>((event, emit) {
+  final updatedImages = List<String>.from(state.room.images)..remove(event.imageUrl);
+  emit(state.copyWith(room: state.room.copyWith(images: updatedImages)));
+});
+
+
   }
 }
