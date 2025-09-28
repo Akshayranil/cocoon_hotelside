@@ -9,14 +9,15 @@ import 'package:flutter/material.dart';
 
 class CustomNavigationscreen extends StatelessWidget {
   final int? tabindex;
-  CustomNavigationscreen({super.key,this.tabindex});
+  final String hotelId;
+  CustomNavigationscreen({super.key, this.tabindex,required this.hotelId});
 
-  final hotelId = "your_saved_hotel_id";
+ 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 4,
-      initialIndex: 0,
+      initialIndex: tabindex??0,
       child: Scaffold(
         bottomNavigationBar: Container(
           color: AppColor.primary,

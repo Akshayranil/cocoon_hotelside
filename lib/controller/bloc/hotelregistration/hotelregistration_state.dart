@@ -1,6 +1,7 @@
 part of 'hotelregistration_bloc.dart';
 
 class HotelregistrationState {
+  final String hotelId;
   final String type;
   final String name;
   final String booking;
@@ -16,6 +17,7 @@ class HotelregistrationState {
   final List<String> hotelimages;
 
   HotelregistrationState({
+    this.hotelId = '',
     this.type = '',
     this.name = '',
     this.booking = '',
@@ -28,10 +30,12 @@ class HotelregistrationState {
     this.isOwnedorLeased = '',
     this.haveRegistration = '',
     this.document = '',
-    this.hotelimages=const []
+    this.hotelimages = const [],
   });
 
   HotelregistrationState copyWith({
+    
+    String? hotelId,
     String? type,
     String? name,
     String? booking,
@@ -44,9 +48,10 @@ class HotelregistrationState {
     String? isOwnedorLeased,
     String? haveRegistration,
     String? document,
-    List<String>? hotelimages
+    List<String>? hotelimages,
   }) {
     return HotelregistrationState(
+      hotelId: hotelId??this.hotelId,
       name: name ?? this.name,
       type: type ?? this.type,
       booking: booking ?? this.booking,
@@ -59,7 +64,7 @@ class HotelregistrationState {
       isOwnedorLeased: isOwnedorLeased ?? this.isOwnedorLeased,
       haveRegistration: haveRegistration ?? this.haveRegistration,
       document: document ?? this.document,
-      hotelimages: hotelimages ?? this.hotelimages
+      hotelimages: hotelimages ?? this.hotelimages,
     );
   }
 }

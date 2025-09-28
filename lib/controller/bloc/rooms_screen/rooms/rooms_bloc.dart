@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/rooms/rooms_state.dart';
@@ -15,7 +17,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   }
 
   Future<void> _onLoadRooms(
-      LoadRoomsEvent event, Emitter<RoomsState> emit) async {
+    LoadRoomsEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
     emit(RoomsLoading());
     try {
       final snapshot = await firestore
@@ -25,17 +29,18 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
           .get();
 
       final rooms = snapshot.docs
-          .map((doc) => Room.fromMap(doc.data()))
+          .map((doc) => Room.fromMap(doc.data(), doc.id))
           .toList();
-
+      log(
+        "Fetched ${snapshot.docs.length} room(s) for hotelId: ${event.hotelId}",
+      );
       emit(RoomsLoaded(rooms));
     } catch (e) {
       emit(RoomsError(e.toString()));
     }
   }
 
-  Future<void> _onAddRoom(
-      AddRoomEvent event, Emitter<RoomsState> emit) async {
+  Future<void> _onAddRoom(AddRoomEvent event, Emitter<RoomsState> emit) async {
     try {
       await firestore
           .collection("hotelregistration")
@@ -51,7 +56,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   }
 
   Future<void> _onUpdateRoom(
-      UpdateRoomEvent event, Emitter<RoomsState> emit) async {
+    UpdateRoomEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
     try {
       await firestore
           .collection("hotelregistration")
@@ -67,7 +74,9 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   }
 
   Future<void> _onDeleteRoom(
-      DeleteRoomEvent event, Emitter<RoomsState> emit) async {
+    DeleteRoomEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
     try {
       await firestore
           .collection("hotelregistration")

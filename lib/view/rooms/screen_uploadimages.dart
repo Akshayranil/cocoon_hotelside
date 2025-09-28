@@ -94,7 +94,7 @@ floatingActionButton: FloatingActionButton(
 
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => CustomNavigationscreen()),
+              MaterialPageRoute(builder: (context) => CustomNavigationscreen(hotelId: hotelId,tabindex: 2,)),
             );
           },
 

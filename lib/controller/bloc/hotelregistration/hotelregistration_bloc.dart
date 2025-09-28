@@ -8,10 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 part 'hotelregistration_event.dart';
 part 'hotelregistration_state.dart';
 
-
-
-
-
 class HotelregistrationBloc
     extends Bloc<HotelregistrationEvent, HotelregistrationState> {
   HotelregistrationBloc() : super(HotelregistrationState()) {
@@ -31,7 +27,7 @@ class HotelregistrationBloc
     on<UpdatedFacilities>(
       (event, emit) => emit(state.copyWith(facilities: event.facilities)),
     );
-  
+
     on<UpdatedPan>((event, emit) => emit(state.copyWith(pan: event.pan)));
     on<UpdatedGSTDetails>(
       (event, emit) => emit(state.copyWith(gst: event.gst)),
@@ -51,13 +47,15 @@ class HotelregistrationBloc
     on<UpdatedDocument>(
       (event, emit) => emit(state.copyWith(document: event.document)),
     );
-    on<UpdatedHotelImages>((event,emit)=>emit(state.copyWith(hotelimages: event.hotelimages)));
+    on<UpdatedHotelImages>(
+      (event, emit) => emit(state.copyWith(hotelimages: event.hotelimages)),
+    );
     on<SubmitHotelRegistration>((event, emit) async {
       try {
         final uid = FirebaseAuth.instance.currentUser!.uid;
-final hotelDoc = FirebaseFirestore.instance
-    .collection('hotelregistration')
-    .doc(uid);
+        final hotelDoc = FirebaseFirestore.instance
+            .collection('hotelregistration')
+            .doc(uid);
         final hotel = Hotel(
           hotelimages: state.hotelimages,
           type: state.type,
@@ -72,9 +70,11 @@ final hotelDoc = FirebaseFirestore.instance
           isOwnedorLeased: state.isOwnedorLeased,
           haveRegistration: state.haveRegistration,
           document: state.document,
+          status: 'Pending',
           createdAt: DateTime.now(),
         );
         await hotelDoc.set(hotel.toMap());
+        emit(state.copyWith(hotelId: uid));
       } catch (e) {
         log("Error submitting documents : $e");
       }

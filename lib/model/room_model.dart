@@ -47,7 +47,7 @@ class Room {
 
   Map<String, dynamic> toMap() {
     return {
-      'roomId': roomId,
+      'roomId':roomId,
       'area': area,
       'type': type,
       'size': size,
@@ -59,18 +59,31 @@ class Room {
     };
   } 
 
-  factory Room.fromMap(Map<String, dynamic> map) {
-    return Room(
-      roomId: map['roomId'] ?? '',
-      area: map['area'] ?? '',
-      type: map['type'] ?? '',
-      size: map['size'] ?? 0,
-      extraBedType: map['extrabedtype']??'',
-      roomPrice: (map['roomPrice'] ?? 0),
-      extraPersons: (map['extraPersons']??0),
-      aminities: List<String>.from(map['aminities'] ?? []),
-      images: List<String>.from(map['images'] ?? []),
-    );
-  }
+factory Room.fromMap(Map<String, dynamic> map, String docId) {
+  return Room(
+    roomId: docId,
+    area: (map['area'] is int)
+        ? map['area']
+        : (map['area'] is double ? (map['area'] as double).toInt() : 0),
+    type: map['type']?.toString() ?? '',
+    size: (map['size'] is int)
+        ? map['size']
+        : (map['size'] is double ? (map['size'] as double).toInt() : 0),
+    extraBedType: map['extrabedtype']?.toString() ?? '',
+    roomPrice: (map['roomPrice'] is int)
+        ? map['roomPrice']
+        : (map['roomPrice'] is double ? (map['roomPrice'] as double).toInt() : 0),
+    extraPersons: (map['extraPersons'] is int)
+        ? map['extraPersons']
+        : (map['extraPersons'] is double ? (map['extraPersons'] as double).toInt() : 0),
+    aminities: (map['aminities'] is List)
+        ? List<String>.from(map['aminities'])
+        : [],
+    images: (map['images'] is List)
+        ? List<String>.from(map['images'])
+        : [],
+  );
+}
+
 }
 

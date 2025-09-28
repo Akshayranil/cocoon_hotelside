@@ -13,6 +13,7 @@ class Hotel {
   final String isOwnedorLeased;
   final String haveRegistration;
   final String document;
+  final String status;
   final DateTime? createdAt;
   final List<String> hotelimages;
   Hotel({
@@ -28,6 +29,7 @@ class Hotel {
     required this.isOwnedorLeased,
     required this.haveRegistration,
     required this.document,
+   required this.status,
     this.createdAt,
     required this.hotelimages
   });
@@ -45,6 +47,7 @@ class Hotel {
     'isOwnedorLeased': isOwnedorLeased,
     'haveRegistration': haveRegistration,
     'document': document,
+    'status':status,
     'createdAt': createdAt,
     'hotelimages':hotelimages
   };
@@ -63,6 +66,7 @@ class Hotel {
       isOwnedorLeased: map['isOwnedorLeased'] ?? '',
       haveRegistration: map['haveRegistration'] ?? '',
       document: map['document'] ?? '',
+      status: map['status']??'',
       createdAt: (map['createdAt'] is Timestamp)
           ? (map['createdAt'] as Timestamp).toDate()
           : null,
