@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SignInScreen extends StatelessWidget {
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
-  final TextEditingController namecontroller = TextEditingController();
+  // final TextEditingController namecontroller = TextEditingController();
   SignInScreen({super.key});
 
   @override
@@ -27,29 +27,29 @@ class SignInScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Text('Sign up now!',style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold,color: AppColor.primary),)),
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: TextField(
-                      controller: namecontroller,
-                      decoration:  InputDecoration(labelText: "Username",border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                       focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: AppColor.primary,
-                          width: 1.5
-                        )
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.grey
-                        )
-                      )
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: EdgeInsets.all(20),
+                  //   child: TextField(
+                  //     controller: namecontroller,
+                  //     decoration:  InputDecoration(labelText: "Username",border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10)
+                  //     ),
+                  //      focusedBorder: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: BorderSide(
+                  //         color: AppColor.primary,
+                  //         width: 1.5
+                  //       )
+                  //     ),
+                  //     enabledBorder: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: BorderSide(
+                  //         color: Colors.grey
+                  //       )
+                  //     )
+                  //     ),
+                  //   ),
+                  // ),
             
                   Padding(
                     padding: EdgeInsets.only(left: 20,right: 20),

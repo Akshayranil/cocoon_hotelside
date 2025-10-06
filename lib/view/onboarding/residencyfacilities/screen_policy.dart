@@ -1,7 +1,7 @@
 import 'package:cocoon_hotelside/controller/bloc/checkbox/checkbox_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_financelegal.dart';
+import 'package:cocoon_hotelside/view/onboarding/propertyregistration/screen_financelegal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -79,7 +79,15 @@ class ScreenPolicy extends StatelessWidget {
       }
     }
   }
-
+  if (selectedPolicies.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Please select at least one policy'),
+        backgroundColor: Colors.red,
+      ),
+    );
+    return; // Stop navigation
+  }
   // Send to HotelregistrationBloc
   context.read<HotelregistrationBloc>().add(UpdatedFacilities(selectedPolicies));
 

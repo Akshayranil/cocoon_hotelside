@@ -4,7 +4,8 @@ import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_event.d
 import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_state.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_claudinary.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_finalverification.dart';
+import 'package:cocoon_hotelside/utilities/custom_colors.dart';
+import 'package:cocoon_hotelside/view/onboarding/propertyverification/screen_finalverification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,8 +67,10 @@ class HotelImagesScreen extends StatelessWidget {
                 // Pass all selected images (if needed for UI)
                 context.read<HotelImagesBloc>().add(UploadHotelImages(images));
               }
-            },
-            child: const Icon(Icons.add_a_photo),
+            },backgroundColor: AppColor.primary,
+            foregroundColor: AppColor.secondary,
+            
+            child: const Icon(Icons.add_a_photo,),
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(10.0),
@@ -79,7 +82,10 @@ class HotelImagesScreen extends StatelessWidget {
                     builder: (context) => FinalVerificationScreen(),
                   ),
                 );
-              },
+              },style: ElevatedButton.styleFrom(
+                foregroundColor: AppColor.ternary,
+                backgroundColor: AppColor.primary
+              ),
               child: Text('Next'),
             ),
           ),

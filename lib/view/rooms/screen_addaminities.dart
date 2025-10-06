@@ -1,6 +1,7 @@
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
+import 'package:cocoon_hotelside/utilities/custom_colors.dart';
 import 'package:cocoon_hotelside/view/rooms/screen_uploadimagesflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +41,7 @@ class AmenitiesScreen extends StatelessWidget {
         onPressed: () {
           _showAddAmenityDialog(context);
         },
+        backgroundColor: AppColor.primary,
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: Padding(
@@ -59,6 +61,7 @@ class AmenitiesScreen extends StatelessWidget {
   ),
 );
           },
+          style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary,foregroundColor: AppColor.ternary),
           child: const Text("Next"),
         ),
       ),
@@ -92,6 +95,10 @@ class AmenitiesScreen extends StatelessWidget {
                 Navigator.pop(dialogcontext);
               }
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColor.primary,
+              foregroundColor: AppColor.ternary
+            ),
             child: const Text("Add"),
           ),
         ],

@@ -1,7 +1,8 @@
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_policy.dart';
+import 'package:cocoon_hotelside/view/onboarding/residencyfacilities/screen_policy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -71,6 +72,11 @@ class PropertyInformation extends StatelessWidget {
               ),
               TextField(
                 controller: contactcontroller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly, // allow only numbers
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 decoration: InputDecoration(
                   label: Text('Enter your contact number'),
                   border: OutlineInputBorder(
@@ -80,14 +86,13 @@ class PropertyInformation extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(color: AppColor.primary, width: 2),
                   ),
-                  hintText: 'Contact number'
+                  hintText: 'Contact number',
                 ),
               ),
 
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(vertical: 20),
                 child: TextField(
-                  
                   controller: emailcontroller,
                   decoration: InputDecoration(
                     label: Text('Enter your mail'),
@@ -110,7 +115,22 @@ class PropertyInformation extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: ElevatedButton(
           onPressed: () {
-            
+            // Check if any field is empty
+            if (hotelcontroller.text.isEmpty ||
+                datecontroller.text.isEmpty ||
+                contactcontroller.text.isEmpty ||
+                emailcontroller.text.isEmpty) {
+              // Show a simple error message
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please fill all the fields'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return; // Stop navigation
+            }
+
+            // If all fields are filled, proceed
             context.read<HotelregistrationBloc>().add(
               UpdatedResidencyName(hotelcontroller.text),
             );
@@ -121,13 +141,15 @@ class PropertyInformation extends StatelessWidget {
               UpdatedContactNumber(contactcontroller.text),
             );
             context.read<HotelregistrationBloc>().add(
-              UpdatedEmail(emailcontroller.text)
+              UpdatedEmail(emailcontroller.text),
             );
+
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ScreenPolicy()),
             );
           },
+
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColor.primary,
             foregroundColor: AppColor.ternary,

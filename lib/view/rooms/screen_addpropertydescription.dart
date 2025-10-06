@@ -64,6 +64,7 @@ class AddPropertyScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
                     child: TextField(
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: "Property Size",
                         border: OutlineInputBorder(),

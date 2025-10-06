@@ -4,6 +4,7 @@ import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addpro
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
 import 'package:cocoon_hotelside/utilities/custom_claudinary.dart';
+import 'package:cocoon_hotelside/utilities/custom_colors.dart';
 import 'package:cocoon_hotelside/utilities/customnavigationscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -75,6 +76,7 @@ floatingActionButton: FloatingActionButton(
       }
     }
   },
+  backgroundColor: AppColor.primary,
   child: const Icon(Icons.add_a_photo),
 ),
 
@@ -96,7 +98,7 @@ floatingActionButton: FloatingActionButton(
               context,
               MaterialPageRoute(builder: (context) => CustomNavigationscreen(hotelId: hotelId,tabindex: 2,)),
             );
-          },
+          },style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary,foregroundColor: AppColor.ternary),
 
           child: const Text("Finish"),
         ),

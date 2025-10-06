@@ -1,5 +1,5 @@
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_chooserecidency.dart';
+import 'package:cocoon_hotelside/view/onboarding/residencytype/screen_chooserecidency.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationScreen extends StatelessWidget {

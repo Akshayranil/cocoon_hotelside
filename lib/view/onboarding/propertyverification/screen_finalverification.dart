@@ -1,5 +1,5 @@
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_ongoingverification.dart';
+import 'package:cocoon_hotelside/view/onboarding/propertyverification/screen_ongoingverification.dart';
 import 'package:flutter/material.dart';
 
 class FinalVerificationScreen extends StatelessWidget {

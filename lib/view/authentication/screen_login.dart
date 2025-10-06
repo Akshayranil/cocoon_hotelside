@@ -2,7 +2,7 @@ import 'package:cocoon_hotelside/controller/bloc/auth/auth_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
 import 'package:cocoon_hotelside/utilities/custom_navbar.dart';
 import 'package:cocoon_hotelside/utilities/reset_passwords.dart';
-import 'package:cocoon_hotelside/view/onboarding/screen_registration.dart';
+import 'package:cocoon_hotelside/view/onboarding/emailsuccess/screen_registration.dart';
 import 'package:cocoon_hotelside/view/authentication/screen_signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
