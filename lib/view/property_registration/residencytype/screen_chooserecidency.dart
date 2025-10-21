@@ -1,7 +1,7 @@
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/selection/selection_cubit.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/residencyinformation/property_information.dart';
+import 'package:cocoon_hotelside/view/property_registration/residencyinformation/property_information.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

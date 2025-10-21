@@ -52,7 +52,7 @@ class SignInScreen extends StatelessWidget {
                   // ),
             
                   Padding(
-                    padding: EdgeInsets.only(left: 20,right: 20),
+                    padding: EdgeInsets.only(left: 20,right: 20,top: 60),
                     child: TextField(
                       controller: emailcontroller,
                       decoration:  InputDecoration(labelText: "Email",border: OutlineInputBorder(
@@ -111,12 +111,12 @@ class SignInScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(250, 40),
                         backgroundColor: AppColor.primary,
-                        foregroundColor: AppColor.secondary,
+                        foregroundColor: AppColor.ternary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                         )
                       ),
-                      child: Text('CREATE ACCOUNT',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),),
+                      child: Text('CREATE ACCOUNT',style: TextStyle(fontSize: 16,color: AppColor.ternary),),
                     ),
                 ],
               ),

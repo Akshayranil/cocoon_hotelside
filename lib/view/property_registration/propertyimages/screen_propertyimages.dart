@@ -5,7 +5,7 @@ import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_state.d
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_claudinary.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/onboarding/propertyverification/screen_finalverification.dart';
+import 'package:cocoon_hotelside/view/property_registration/propertyverification/screen_finalverification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
