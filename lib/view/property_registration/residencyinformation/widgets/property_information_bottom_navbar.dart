@@ -9,12 +9,14 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
   final TextEditingController datecontroller;
   final TextEditingController contactcontroller;
   final TextEditingController emailcontroller;
+  final TextEditingController pricecontroller;
   const PropertyInformationBottomNavbar({
     super.key,
     required this.hotelcontroller,
     required this.datecontroller,
     required this.contactcontroller,
     required this.emailcontroller,
+    required this.pricecontroller,
   });
 
   @override
@@ -27,7 +29,8 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
           if (hotelcontroller.text.isEmpty ||
               datecontroller.text.isEmpty ||
               contactcontroller.text.isEmpty ||
-              emailcontroller.text.isEmpty) {
+              emailcontroller.text.isEmpty ||
+              pricecontroller.text.isEmpty) {
             // Show a simple error message
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -50,6 +53,9 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
           );
           context.read<HotelregistrationBloc>().add(
             UpdatedEmail(emailcontroller.text),
+          );
+          context.read<HotelregistrationBloc>().add(
+            UpdatedPrice(pricecontroller.text),
           );
 
           Navigator.push(

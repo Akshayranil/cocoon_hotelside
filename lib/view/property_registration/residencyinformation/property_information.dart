@@ -2,6 +2,7 @@ import 'package:cocoon_hotelside/view/property_registration/residencyinformation
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_information_bottom_navbar.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_mail_field.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_name_field.dart';
+import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_price_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ class PropertyInformation extends StatelessWidget {
   final TextEditingController datecontroller = TextEditingController();
   final TextEditingController contactcontroller = TextEditingController();
   final TextEditingController emailcontroller = TextEditingController();
+  final TextEditingController pricecontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     String today = DateFormat('dd-MM-yy').format(DateTime.now());
@@ -26,6 +28,10 @@ class PropertyInformation extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: HotelNameField(hotelcontroller: hotelcontroller),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: PropertyPriceField(pricecontroller: pricecontroller),
               ),
               Text(
                 'Taking Booking Since',
@@ -58,6 +64,7 @@ class PropertyInformation extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: PropertyInformationBottomNavbar(
+        pricecontroller: pricecontroller,
         hotelcontroller: hotelcontroller,
         datecontroller: datecontroller,
         contactcontroller: contactcontroller,

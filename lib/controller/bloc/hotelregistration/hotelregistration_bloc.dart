@@ -50,6 +50,7 @@ class HotelregistrationBloc
     on<UpdatedHotelImages>(
       (event, emit) => emit(state.copyWith(hotelimages: event.hotelimages)),
     );
+    on<UpdatedPrice>((event, emit) => emit(state.copyWith(price: event.price)));
     on<SubmitHotelRegistration>((event, emit) async {
       try {
         final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -71,6 +72,7 @@ class HotelregistrationBloc
           haveRegistration: state.haveRegistration,
           document: state.document,
           status: 'Pending',
+          price: state.price,
           createdAt: DateTime.now(),
         );
         await hotelDoc.set(hotel.toMap());

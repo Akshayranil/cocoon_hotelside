@@ -16,6 +16,7 @@ class Hotel {
   final String status;
   final DateTime? createdAt;
   final List<String> hotelimages;
+  final String price;
   Hotel({
     required this.type,
     required this.name,
@@ -29,9 +30,10 @@ class Hotel {
     required this.isOwnedorLeased,
     required this.haveRegistration,
     required this.document,
-   required this.status,
+    required this.status,
     this.createdAt,
-    required this.hotelimages
+    required this.hotelimages,
+    required this.price
   });
 
   Map<String, dynamic> toMap() => {
@@ -47,9 +49,10 @@ class Hotel {
     'isOwnedorLeased': isOwnedorLeased,
     'haveRegistration': haveRegistration,
     'document': document,
-    'status':status,
+    'status': status,
     'createdAt': createdAt,
-    'hotelimages':hotelimages
+    'hotelimages': hotelimages,
+    'price':price,
   };
 
   factory Hotel.fromMap(Map<String, dynamic> map) {
@@ -66,11 +69,12 @@ class Hotel {
       isOwnedorLeased: map['isOwnedorLeased'] ?? '',
       haveRegistration: map['haveRegistration'] ?? '',
       document: map['document'] ?? '',
-      status: map['status']??'',
+      status: map['status'] ?? '',
       createdAt: (map['createdAt'] is Timestamp)
           ? (map['createdAt'] as Timestamp).toDate()
           : null,
-      hotelimages: List<String>.from(map['hotelimages']??[])    
+      hotelimages: List<String>.from(map['hotelimages'] ?? []),
+      price: (map['price']??"")
     );
   }
 }

@@ -15,6 +15,7 @@ class HotelregistrationState {
   final String haveRegistration;
   final String document;
   final List<String> hotelimages;
+  final String price;
 
   HotelregistrationState({
     this.hotelId = '',
@@ -30,11 +31,11 @@ class HotelregistrationState {
     this.isOwnedorLeased = '',
     this.haveRegistration = '',
     this.document = '',
+    this.price = '',
     this.hotelimages = const [],
   });
 
   HotelregistrationState copyWith({
-    
     String? hotelId,
     String? type,
     String? name,
@@ -49,9 +50,10 @@ class HotelregistrationState {
     String? haveRegistration,
     String? document,
     List<String>? hotelimages,
+    String? price,
   }) {
     return HotelregistrationState(
-      hotelId: hotelId??this.hotelId,
+      hotelId: hotelId ?? this.hotelId,
       name: name ?? this.name,
       type: type ?? this.type,
       booking: booking ?? this.booking,
@@ -65,6 +67,7 @@ class HotelregistrationState {
       haveRegistration: haveRegistration ?? this.haveRegistration,
       document: document ?? this.document,
       hotelimages: hotelimages ?? this.hotelimages,
+      price: price ?? this.price,
     );
   }
 }

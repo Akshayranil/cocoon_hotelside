@@ -82,4 +82,11 @@ class UpdatedDocument extends HotelregistrationEvent {
   UpdatedDocument(this.document);
 }
 
+class UpdatedPrice extends HotelregistrationEvent {
+  final String price;
+
+  UpdatedPrice(this.price);
+
+}
+
 class SubmitHotelRegistration extends HotelregistrationEvent {}
