@@ -13,6 +13,7 @@ import 'package:sign_in_button/sign_in_button.dart';
 class LoginScreen extends StatelessWidget {
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
+   bool obscureText = true;
   LoginScreen({super.key});
 
   @override
@@ -79,26 +80,44 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 30),
-                  TextField(
-                    controller: passwordcontroller,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: AppColor.primary,
-                          width: 1.5,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                  ),
+                   StatefulBuilder(
+  builder: (context, setState) {
+    
+
+    return TextField(
+      controller: passwordcontroller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: AppColor.primary,
+            width: 1.5,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        suffixIcon: IconButton(
+          icon: Icon(
+            obscureText ? Icons.visibility_off : Icons.visibility,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            setState(() {
+              obscureText = !obscureText;
+            });
+          },
+        ),
+      ),
+    );
+  },
+),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

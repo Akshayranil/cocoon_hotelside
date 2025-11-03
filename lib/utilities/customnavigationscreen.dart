@@ -35,10 +35,10 @@ class CustomNavigationscreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            HomeScreen(),
+            HomeScreen(hotelId: hotelId,),
             BookingsScreen(),
             RoomsScreen(hotelId: hotelId),
-            ProfileScreen(),
+            ProfileScreen(hotelId: hotelId,),
           ],
         ),
       ),

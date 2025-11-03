@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/model/hotel_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 
 part 'hotelregistration_event.dart';
 part 'hotelregistration_state.dart';
@@ -54,6 +55,9 @@ class HotelregistrationBloc
     on<SubmitHotelRegistration>((event, emit) async {
       try {
         final uid = FirebaseAuth.instance.currentUser!.uid;
+        final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high,
+        );
         final hotelDoc = FirebaseFirestore.instance
             .collection('hotelregistration')
             .doc(uid);
@@ -74,6 +78,8 @@ class HotelregistrationBloc
           status: 'Pending',
           price: state.price,
           createdAt: DateTime.now(),
+          latitude: position.latitude,
+          longitude: position.longitude,
         );
         await hotelDoc.set(hotel.toMap());
         emit(state.copyWith(hotelId: uid));

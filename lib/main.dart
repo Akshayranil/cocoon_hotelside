@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/controller/bloc/auth/auth_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/booking/booking_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/checkbox/checkbox_bloc.dart';
+import 'package:cocoon_hotelside/controller/bloc/dashboard/dashboard_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelimages/hotelimages_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
@@ -41,7 +42,9 @@ class MyApp extends StatelessWidget {
          BlocProvider<HotelregistrationBloc>(create: (_)=>HotelregistrationBloc()),
          BlocProvider<RoomsBloc>(create: (_)=>RoomsBloc(FirebaseFirestore.instance)),
          BlocProvider<HotelImagesBloc>(create: (_) => HotelImagesBloc()..add(LoadHotelImages()),),
-         BlocProvider<BookingBloc>(create: (_)=>BookingBloc(FirebaseFirestore.instance))
+         BlocProvider<BookingBloc>(create: (_)=>BookingBloc(FirebaseFirestore.instance)),
+         BlocProvider<DashboardBloc>(create: (_)=>DashboardBloc())
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

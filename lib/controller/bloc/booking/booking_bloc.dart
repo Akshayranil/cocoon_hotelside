@@ -25,7 +25,7 @@ class BookingBloc extends Bloc<BookingHotelEvent, BookingHotelState> {
             'hotelName': data['hotelName'] ?? '',
             'location': data['location'] ?? '',
             'price': data['price'] ?? 0,
-            'imageUrl': data['imageUrl'] ?? '',
+            'imageUrl': data['imageUrl'] ?? '', 
             'checkInDate': data['checkInDate'] ?? '',
             'checkOutDate': data['checkOutDate'] ?? '',
             'guests': data['guests'] ?? 0,
