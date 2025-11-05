@@ -1,3 +1,5 @@
+import 'package:cocoon_hotelside/utilities/customnavigationscreen.dart';
+import 'package:cocoon_hotelside/view/home/revenue_filter_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cocoon_hotelside/controller/bloc/dashboard/dashboard_bloc.dart';
@@ -10,110 +12,140 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => DashboardBloc()..add(LoadDashboardData(hotelId)),
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
-        body: SafeArea(
-          child: BlocBuilder<DashboardBloc, DashboardState>(
-            builder: (context, state) {
-              if (state is DashboardLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is DashboardLoaded) {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<DashboardBloc>().add(
-                      LoadDashboardData(hotelId),
-                    );
-                  },
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _headerCard(state.hotelName),
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Dashboard Overview',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _infoCard(
-                          title: "Total Bookings",
-                          value: state.totalBookings.toString(),
-                          icon: Icons.bookmark_added,
-                          color: Colors.blue,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.blue.shade400,
-                              Colors.blue.shade600,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _infoCard(
-                          title: "Total Rooms",
-                          value: state.totalRooms.toString(),
-                          icon: Icons.hotel,
-                          color: Colors.orange,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.orange.shade400,
-                              Colors.orange.shade600,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _infoCard(
-                          title: "Total Revenue",
-                          value: "₹ ${state.totalRevenue.toStringAsFixed(0)}",
-                          icon: Icons.currency_rupee,
-                          color: Colors.green,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.green.shade400,
-                              Colors.green.shade600,
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              } else if (state is DashboardError) {
-                return Center(
+    return Scaffold(
+      backgroundColor: Colors.grey.shade50,
+      body: SafeArea(
+        child: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            if (state is DashboardLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is DashboardLoaded) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  context.read<DashboardBloc>().add(LoadDashboardData(hotelId));
+                },
+                child: SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.red.shade300,
+                      _headerCard(state.hotelName),
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Dashboard Overview',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        state.message,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.red),
+                      _infoCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomNavigationscreen(
+                                hotelId: hotelId,
+                                tabindex: 1,
+                              ),
+                            ),
+                          );
+                        },
+                        title: "Total Bookings",
+                        value: state.totalBookings.toString(),
+                        icon: Icons.bookmark_added,
+                        color: Colors.blue,
+                        gradient: LinearGradient(
+                          colors: [Colors.blue.shade400, Colors.blue.shade600],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _infoCard(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CustomNavigationscreen(
+                                hotelId: hotelId,
+                                tabindex: 2,
+                              ),
+                            ),
+                          );
+                        },
+                        title: "Total Rooms",
+                        value: state.totalRooms.toString(),
+                        icon: Icons.hotel,
+                        color: Colors.orange,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.orange.shade400,
+                            Colors.orange.shade600,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _infoCard(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return RevenueFilterSheet(
+                                onSelect: (filter) {
+                                  Navigator.pop(context);
+                                  context.read<DashboardBloc>().add(
+                                    FilterRevenueEvent(hotelId, filter),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                        title:
+                            "Revenue (${state.revenueFilter})", // ✅ Dynamic label
+                        value: "₹ ${state.totalRevenue.toStringAsFixed(0)}",
+                        icon: Icons.currency_rupee,
+                        color: Colors.green,
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.green.shade400,
+                            Colors.green.shade600,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
                       ),
                     ],
                   ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+                ),
+              );
+            } else if (state is DashboardError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red.shade300,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
@@ -199,72 +231,77 @@ class HomeScreen extends StatelessWidget {
     required IconData icon,
     required Color color,
     required Gradient gradient,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Icon container
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(14),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-            child: Icon(icon, color: Colors.white, size: 32),
-          ),
-          const SizedBox(width: 16),
-          // Text content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon container
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: Colors.white, size: 32),
+            ),
+            const SizedBox(width: 16),
+            // Text content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          // Arrow icon
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
+
+            // Arrow icon
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
-            child: const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white,
-              size: 18,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

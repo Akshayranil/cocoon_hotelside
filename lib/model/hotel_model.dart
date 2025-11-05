@@ -19,6 +19,8 @@ class Hotel {
   final String price;
   final double? latitude;
   final double? longitude;
+  final double rating;
+  final int reviewCount;
   Hotel({
     required this.type,
     required this.name,
@@ -37,7 +39,9 @@ class Hotel {
     required this.hotelimages,
     required this.price,
     this.latitude,
-    this.longitude
+    this.longitude,
+    this.rating= 0.0,
+    this.reviewCount = 0,
   });
 
   Map<String, dynamic> toMap() => {
@@ -58,7 +62,9 @@ class Hotel {
     'hotelimages': hotelimages,
     'price': price,
     'latitude':latitude,
-    'longitude':longitude
+    'longitude':longitude,
+    'reviewCount':reviewCount,
+    'rating': rating,
   };
 
   factory Hotel.fromMap(Map<String, dynamic> map) {
@@ -83,6 +89,8 @@ class Hotel {
       price: (map['price'] ?? ""),
       latitude: (map['latitude']as num?)?.toDouble(),
       longitude: (map['longitude'] as num?)?.toDouble(),
+      reviewCount: map['reviewCount']??0,
+      rating: (map['rating'] ?? 0.0).toDouble(),
     );
   }
 }

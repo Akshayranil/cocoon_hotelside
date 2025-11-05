@@ -80,6 +80,8 @@ class HotelregistrationBloc
           createdAt: DateTime.now(),
           latitude: position.latitude,
           longitude: position.longitude,
+          rating: 0.0,
+          reviewCount: 0
         );
         await hotelDoc.set(hotel.toMap());
         emit(state.copyWith(hotelId: uid));

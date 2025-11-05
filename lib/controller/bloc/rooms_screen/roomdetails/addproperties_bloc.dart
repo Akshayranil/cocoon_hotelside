@@ -1,11 +1,20 @@
 
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
+import 'package:cocoon_hotelside/model/room_model.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddpropertiesBloc extends Bloc<AddpropertiesEvent, AddpropertiesState> {
-  AddpropertiesBloc(String roomId) : super(AddpropertiesState.initial(roomId)) {
+  final FirebaseFirestore firestore;
+  AddpropertiesBloc(String roomId,this.firestore) : super(AddpropertiesState.initial(roomId)) {
+    
+    on<LoadExistingRoom>(_onLoadExistingRoom);
+
     on<UpdateRoomArea>((event, emit) {
       emit(state.copyWith(room: state.room.copyWith(area: event.area)));
     });
@@ -66,4 +75,32 @@ on<RemoveImage>((event, emit) {
 
 
   }
+
+    Future<void> _onLoadExistingRoom(
+    LoadExistingRoom event,
+    Emitter<AddpropertiesState> emit,
+  ) async {
+    try {
+      log("Loading existing room: ${event.roomId} from hotel: ${event.hotelId}");
+
+      final doc = await firestore
+          .collection('hotelregistration')
+          .doc(event.hotelId)
+          .collection('rooms')
+          .doc(event.roomId)
+          .get();
+
+      if (doc.exists) {
+        final room = Room.fromMap(doc.data()!, doc.id);
+        log("Room loaded successfully: ${room.type}, Area: ${room.area}");
+        emit(state.copyWith(room: room));
+      } else {
+        log("Room not found, keeping initial state");
+      }
+    } catch (e) {
+      log("Error loading room: $e");
+      emit(state.copyWith(errorMessage: e.toString()));
+    }
+  }
+
 }

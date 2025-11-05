@@ -2,7 +2,6 @@ import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addpro
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_event.dart';
 import 'package:cocoon_hotelside/controller/bloc/rooms_screen/roomdetails/addproperties_state.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
-import 'package:cocoon_hotelside/view/rooms/screen_addaminities.dart';
 import 'package:cocoon_hotelside/view/rooms/screen_addaminitiesflow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,13 @@ class AddPropertyScreen extends StatelessWidget {
   final String uid;
   final String hotelId;
   final String roomId;
-  const AddPropertyScreen({super.key, required this.uid,required this.hotelId,required this.roomId});
+
+  const AddPropertyScreen({
+    super.key,
+    required this.uid,
+    required this.hotelId,
+    required this.roomId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +30,10 @@ class AddPropertyScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Room Area
-                  TextField(
+                  // Room Area - Use initialValue instead of controller
+                  TextFormField(
+                    key: ValueKey('area_${state.room.area}'), // ✅ Force rebuild on data load
+                    initialValue: state.room.area > 0 ? state.room.area.toString() : '',
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: "Room Area (sq.ft)",
@@ -35,8 +42,8 @@ class AddPropertyScreen extends StatelessWidget {
                     onChanged: (value) {
                       final area = int.tryParse(value) ?? 0;
                       context.read<AddpropertiesBloc>().add(
-                        UpdateRoomArea(area),
-                      );
+                            UpdateRoomArea(area),
+                          );
                     },
                   ),
 
@@ -44,7 +51,7 @@ class AddPropertyScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
                     child: DropdownButtonFormField<String>(
-                      value: state.room.type,
+                      value: state.room.type.isEmpty ? "Single" : state.room.type,
                       items: ["Single", "Double", "Couple", "Family", "Other"]
                           .map(
                             (e) => DropdownMenuItem(value: e, child: Text(e)),
@@ -63,7 +70,9 @@ class AddPropertyScreen extends StatelessWidget {
                   // Property Size
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: TextField(
+                    child: TextFormField(
+                      key: ValueKey('size_${state.room.size}'), // ✅ Force rebuild
+                      initialValue: state.room.size > 0 ? state.room.size.toString() : '',
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: "Property Size",
@@ -72,8 +81,8 @@ class AddPropertyScreen extends StatelessWidget {
                       onChanged: (value) {
                         final size = int.tryParse(value) ?? 0;
                         context.read<AddpropertiesBloc>().add(
-                          UpdatePropertySize(size),
-                        );
+                              UpdatePropertySize(size),
+                            );
                       },
                     ),
                   ),
@@ -82,7 +91,9 @@ class AddPropertyScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
                     child: DropdownButtonFormField<String>(
-                      value: state.room.extraBedType,
+                      value: state.room.extraBedType.isEmpty
+                          ? "Standard Bed"
+                          : state.room.extraBedType,
                       items: ["Standard Bed", "Extra Bed"]
                           .map(
                             (e) => DropdownMenuItem(value: e, child: Text(e)),
@@ -101,17 +112,19 @@ class AddPropertyScreen extends StatelessWidget {
                   // Room Price
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: TextField(
+                    child: TextFormField(
+                      key: ValueKey('price_${state.room.roomPrice}'), // ✅ Force rebuild
+                      initialValue: state.room.roomPrice > 0 ? state.room.roomPrice.toString() : '',
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                        labelText: "Room Price (\$)",
+                        labelText: "Room Price (₹)",
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (value) {
                         final price = int.tryParse(value) ?? 0;
                         context.read<AddpropertiesBloc>().add(
-                          UpdateRoomPrice(price),
-                        );
+                              UpdateRoomPrice(price),
+                            );
                       },
                     ),
                   ),
@@ -119,7 +132,9 @@ class AddPropertyScreen extends StatelessWidget {
                   // Extra Persons Allowed
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: TextField(
+                    child: TextFormField(
+                      key: ValueKey('extraPersons_${state.room.extraPersons}'), // ✅ Force rebuild
+                      initialValue: state.room.extraPersons > 0 ? state.room.extraPersons.toString() : '',
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: "Number of Extra Persons Allowed",
@@ -128,8 +143,8 @@ class AddPropertyScreen extends StatelessWidget {
                       onChanged: (value) {
                         final persons = int.tryParse(value) ?? 0;
                         context.read<AddpropertiesBloc>().add(
-                          UpdateExtraPersons(persons),
-                        );
+                              UpdateExtraPersons(persons),
+                            );
                       },
                     ),
                   ),
@@ -143,14 +158,11 @@ class AddPropertyScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: ElevatedButton(
           onPressed: () {
-            // Navigate to AmenitiesScreen using the **same Bloc**
-            // In AddPropertyScreen when navigating:
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => BlocProvider.value(
-                  value: context
-                      .read<AddpropertiesBloc>(), // reuse existing instance
+                  value: context.read<AddpropertiesBloc>(),
                   child: AddAmenityFlow(
                     hotelId: uid,
                     roomId: context.read<AddpropertiesBloc>().state.room.roomId,

@@ -11,12 +11,14 @@ class DashboardLoaded extends DashboardState {
   final int totalBookings;
   final int totalRooms;
   final double totalRevenue;
+  final String revenueFilter;
 
   DashboardLoaded({
     required this.hotelName,
     required this.totalBookings,
     required this.totalRooms,
     required this.totalRevenue,
+    this.revenueFilter = "Today"
   });
 }
 

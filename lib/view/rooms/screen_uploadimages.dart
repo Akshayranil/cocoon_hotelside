@@ -81,28 +81,38 @@ floatingActionButton: FloatingActionButton(
 ),
 
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ElevatedButton(
-          onPressed: () async {
-            final state = context.read<AddpropertiesBloc>().state;
+     bottomNavigationBar: Padding(
+  padding: const EdgeInsets.all(10),
+  child: ElevatedButton(
+    onPressed: () async {
+      final state = context.read<AddpropertiesBloc>().state;
 
-            await FirebaseFirestore.instance
-                .collection('hotelregistration')
-                .doc(hotelId)
-                .collection('rooms')
-                .doc(roomId)
-                .set(state.room.toMap());
+      // ✅ Use set with merge for both create and update
+      await FirebaseFirestore.instance
+          .collection('hotelregistration')
+          .doc(hotelId)
+          .collection('rooms')
+          .doc(roomId)
+          .set(state.room.toMap(), SetOptions(merge: true));
 
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => CustomNavigationscreen(hotelId: hotelId,tabindex: 2,)),
-            );
-          },style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary,foregroundColor: AppColor.ternary),
-
-          child: const Text("Finish"),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CustomNavigationscreen(
+            hotelId: hotelId,
+            tabindex: 2,
+          ),
         ),
-      ),
+      );
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppColor.primary,
+      foregroundColor: AppColor.ternary,
+    ),
+    child: const Text("Finish"),
+  ),
+),
+
     );
   }
 }

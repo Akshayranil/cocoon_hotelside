@@ -8,12 +8,9 @@ class LoadDashboardData extends DashboardEvent {
   LoadDashboardData(this.hotelId);
 }
 
-enum RevenueFilter { today, week, month, all }
-
-class FilterRevenue extends DashboardEvent {
-  final RevenueFilter filter;
+class FilterRevenueEvent extends DashboardEvent {
   final String hotelId;
-
-  FilterRevenue(this.filter, this.hotelId);
+  final String filter;
+  FilterRevenueEvent(this.hotelId, this.filter);
 }
 

@@ -1,5 +1,11 @@
 abstract class AddpropertiesEvent {}
 
+class LoadExistingRoom extends AddpropertiesEvent {
+  final String hotelId;
+  final String roomId;
+  
+  LoadExistingRoom({required this.hotelId, required this.roomId});
+}
 class UpdateRoomArea extends AddpropertiesEvent {
   final int area;
   UpdateRoomArea(this.area);
