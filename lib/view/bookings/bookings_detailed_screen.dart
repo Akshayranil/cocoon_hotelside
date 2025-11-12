@@ -35,7 +35,9 @@ class GuestInfoScreen extends StatelessWidget {
                 Text('Booking ID: ${booking['roomId'] ?? ''}',
                     style: const TextStyle(fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
-                Text('Booked by: ${booking['userName'] ?? 'Unknown'}'),
+               
+                Text('Guest Name: ${booking['userName'] ?? 'Unknown'}'),
+                Text('Phone Number: ${booking['userPhone'] ?? 'Not Provided'}'),
                 Text('No. of guests: ${booking['guests'] ?? 0}'),
                 Text('Room Booked: ${booking['location'] ?? ''}'),
                 const SizedBox(height: 12),

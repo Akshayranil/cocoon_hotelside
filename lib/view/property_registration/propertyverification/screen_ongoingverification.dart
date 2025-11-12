@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerificationScreen extends StatelessWidget {
+  const VerificationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<HotelregistrationBloc, HotelregistrationState>(

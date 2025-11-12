@@ -1,4 +1,5 @@
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
+import 'package:cocoon_hotelside/view/property_registration/propertyverification/screen_details_preview.dart';
 import 'package:cocoon_hotelside/view/property_registration/propertyverification/screen_ongoingverification.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,7 @@ class FinalVerificationScreen extends StatelessWidget {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => VerificationScreen()),
+              MaterialPageRoute(builder: (context) => PreviewHotelDetailsScreen()),
             );
           },
           style: ElevatedButton.styleFrom(

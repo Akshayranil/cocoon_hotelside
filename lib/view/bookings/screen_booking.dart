@@ -1,5 +1,6 @@
 import 'package:cocoon_hotelside/controller/bloc/booking/booking_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
+import 'package:cocoon_hotelside/utilities/custom_date.dart';
 import 'package:cocoon_hotelside/view/bookings/bookings_detailed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -81,7 +82,7 @@ class BookingsScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Booking on: ${booking['checkInDate'] ?? ''}',
+                                'Booking on: ${formatDate(booking['checkInDate'] ?? '')}',
                                 style: const TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.w600,
@@ -138,7 +139,7 @@ class BookingsScreen extends StatelessWidget {
                                       color: Colors.black54,
                                     ),
                                   ),
-                                  Text(booking['checkInDate'] ?? ''),
+                                  Text(formatDate(booking['checkInDate'] ?? '')),
                                 ],
                               ),
                               Column(
@@ -151,7 +152,7 @@ class BookingsScreen extends StatelessWidget {
                                       color: Colors.black54,
                                     ),
                                   ),
-                                  Text(booking['checkOutDate'] ?? ''),
+                                  Text(formatDate(booking['checkOutDate'] ?? '')),
                                 ],
                               ),
                             ],
