@@ -33,7 +33,7 @@ class PreviewHotelDetailsScreen extends StatelessWidget {
                   details: state.type,
                   onEdit: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const TypeofRecidency()),
+                    MaterialPageRoute(builder: (_) => const TypeofRecidency(isEditing: true,)),
                   ),
                 ),
 
@@ -52,7 +52,7 @@ Email: ${state.email}
                     context,
                     MaterialPageRoute(builder: (_) => BlocProvider.value(
                       value: context.read<HotelregistrationBloc>(),
-                      child: PropertyInformation(),)),
+                      child: PropertyInformation(isEditing: true,),)),
                   ),
                 ),
 
@@ -62,7 +62,7 @@ Email: ${state.email}
                   details: state.facilities.join(", "),
                   onEdit: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => ScreenPolicy()),
+                    MaterialPageRoute(builder: (_) => ScreenPolicy(isEditing: true,)),
                   ),
                 ),
 
@@ -79,7 +79,7 @@ Property Info: ${state.propertyinformation}
                     context,
                     MaterialPageRoute(builder: (_) => BlocProvider.value(
                       value: context.read<HotelregistrationBloc>(),
-                      child: FinanceandPolicy(),)),
+                      child: FinanceandPolicy(isEditing: true,),)),
                   ),
                 ),
 
@@ -90,7 +90,7 @@ Property Info: ${state.propertyinformation}
                   onEdit: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const HotelImagesScreen(),
+                      builder: (_) => const HotelImagesScreen(isEditing: true,),
                     ),
                   ),
                 ),

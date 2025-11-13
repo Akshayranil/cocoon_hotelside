@@ -7,9 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ignore: must_be_immutable
 class TypeofRecidency extends StatelessWidget {
-  const TypeofRecidency({super.key});
-
-  
+  final bool isEditing;
+  const TypeofRecidency({super.key, this.isEditing = false});
 
   final List<String> residencyOption = const [
     "Hotels",
@@ -96,19 +95,28 @@ class TypeofRecidency extends StatelessWidget {
               context.read<HotelregistrationBloc>().add(
                 UpdatedResidencyType(selectedOption),
               );
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PropertyInformation()),
-              );
+              if (isEditing) {
+                Navigator.pop(context);
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PropertyInformation(),
+                  ),
+                );
+              }
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Please select a residency type"),backgroundColor: Colors.red,),
+                SnackBar(
+                  content: Text("Please select a residency type"),
+                  backgroundColor: Colors.red,
+                ),
               );
             }
           },
           style: ElevatedButton.styleFrom(backgroundColor: AppColor.primary),
           child: Text(
-            'Next',
+            isEditing?'Save changes':'Next',
             style: TextStyle(
               color: AppColor.ternary,
               fontSize: 16,

@@ -30,6 +30,10 @@ class BookingBloc extends Bloc<BookingHotelEvent, BookingHotelState> {
             'checkOutDate': data['checkOutDate'] ?? '',
             'guests': data['guests'] ?? 0,
             'paymentStatus': data['paymentStatus'] ?? 'Pending',
+            'timestamp':data['timestamp']??'',
+            'userName':data['userName']??'Unknown',
+            'userPhone' :data['userPhone']??'1234567890',
+
           };
         }).toList();
 

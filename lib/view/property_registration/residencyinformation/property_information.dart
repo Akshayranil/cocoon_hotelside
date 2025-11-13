@@ -1,3 +1,4 @@
+import 'package:cocoon_hotelside/controller/bloc/hotelregistration/hotelregistration_bloc.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_contact_field.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_information_bottom_navbar.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_location.dart';
@@ -5,9 +6,11 @@ import 'package:cocoon_hotelside/view/property_registration/residencyinformation
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_name_field.dart';
 import 'package:cocoon_hotelside/view/property_registration/residencyinformation/widgets/property_price_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PropertyInformation extends StatelessWidget {
-  PropertyInformation({super.key});
+  final bool isEditing;
+  PropertyInformation({super.key,this.isEditing=false});
 
   // ✅ Controllers
   final TextEditingController hotelcontroller = TextEditingController();
@@ -17,8 +20,9 @@ class PropertyInformation extends StatelessWidget {
   final TextEditingController pricecontroller = TextEditingController();
 
   // ✅ Persist selected year using ValueNotifier
-  final ValueNotifier<String> selectedYearNotifier =
-      ValueNotifier(DateTime.now().year.toString());
+  final ValueNotifier<String> selectedYearNotifier = ValueNotifier(
+    DateTime.now().year.toString(),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +36,20 @@ class PropertyInformation extends StatelessWidget {
       30,
       (index) => (DateTime.now().year - index).toString(),
     );
+     final blocState = context.read<HotelregistrationBloc>().state;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isEditing) {
+        hotelcontroller.text = blocState.name ?? '';
+        pricecontroller.text = blocState.price ?? '';
+        datecontroller.text = blocState.booking ?? '';
+        contactcontroller.text = blocState.phonenumber ?? '';
+        emailcontroller.text = blocState.email ?? '';
 
+        if (blocState.booking != null && blocState.booking!.isNotEmpty) {
+          selectedYearNotifier.value = blocState.booking!;
+        }
+      }
+    });
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -65,7 +82,6 @@ class PropertyInformation extends StatelessWidget {
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
-                          
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey.shade400),
                         ),
@@ -110,6 +126,7 @@ class PropertyInformation extends StatelessWidget {
         datecontroller: datecontroller,
         contactcontroller: contactcontroller,
         emailcontroller: emailcontroller,
+        isEditing:isEditing,
       ),
     );
   }

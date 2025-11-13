@@ -8,3 +8,8 @@ class UploadHotelImages extends HotelImagesEvent {
   final List<File> images;
   UploadHotelImages(this.images);
 }
+
+class DeleteHotelImage extends HotelImagesEvent {
+  final int index;
+  DeleteHotelImage(this.index);
+}

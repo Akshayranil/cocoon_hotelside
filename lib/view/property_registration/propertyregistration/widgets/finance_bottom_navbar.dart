@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FinanceBottomNavbar extends StatelessWidget {
+  final bool isEditing;
   final TextEditingController pancontroller;
   final TextEditingController informationcontroller;
   final TextEditingController gstcontroller;
-  const FinanceBottomNavbar({super.key,required this.informationcontroller,required this.gstcontroller,required this.pancontroller});
+  const FinanceBottomNavbar({
+    super.key,
+    required this.informationcontroller,
+    required this.gstcontroller,
+    required this.pancontroller,
+    this.isEditing = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +32,20 @@ class FinanceBottomNavbar extends StatelessWidget {
           context.read<HotelregistrationBloc>().add(
             UpdatedGSTDetails(gstcontroller.text),
           );
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HotelImagesScreen()),
-          );
+          if (isEditing) {
+            Navigator.pop(context);
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HotelImagesScreen()),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: AppColor.ternary,
           backgroundColor: AppColor.primary,
         ),
-        child: Text('Next'),
+        child: Text(isEditing?"Save changes":"Next"),
       ),
     );
   }

@@ -11,7 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HotelImagesScreen extends StatelessWidget {
-  const HotelImagesScreen({super.key});
+  final bool isEditing;
+  const HotelImagesScreen({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,37 @@ class HotelImagesScreen extends StatelessWidget {
                   ),
                   itemCount: state.imageUrls.length,
                   itemBuilder: (context, index) {
-                    return Image.network(
-                      state.imageUrls[index],
-                      fit: BoxFit.cover,
+                    final imageUrl = state.imageUrls[index];
+                    return Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Image.network(imageUrl, fit: BoxFit.cover),
+                        ),
+                        // ✅ Delete button overlay
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              shape: BoxShape.circle,
+                              
+                            ),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                              onPressed: () {
+                                _confirmDelete(context, index, imageUrl);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -44,12 +73,12 @@ class HotelImagesScreen extends StatelessWidget {
               final picker = ImagePicker();
               final pickedFiles = await picker.pickMultiImage();
 
-              if (pickedFiles.isNotEmpty) {
+              if (pickedFiles != null && pickedFiles.isNotEmpty) {
                 final images = pickedFiles
                     .map((file) => File(file.path))
                     .toList();
 
-                // List to store all uploaded URLs
+                // List to store uploaded URLs
                 List<String> uploadedUrls = [];
 
                 for (var file in images) {
@@ -59,38 +88,74 @@ class HotelImagesScreen extends StatelessWidget {
                   }
                 }
 
-                // Dispatch event with all uploaded URLs
                 if (uploadedUrls.isNotEmpty) {
+                  // Update hotel registration BLoC
                   hotelbloc.add(UpdatedHotelImages(uploadedUrls));
+                  // Update local Bloc for UI
+                  context.read<HotelImagesBloc>().add(
+                    UploadHotelImages(images),
+                  );
                 }
-
-                // Pass all selected images (if needed for UI)
-                context.read<HotelImagesBloc>().add(UploadHotelImages(images));
               }
-            },backgroundColor: AppColor.primary,
+            },
+            backgroundColor: AppColor.primary,
             foregroundColor: AppColor.secondary,
-            
-            child: const Icon(Icons.add_a_photo,),
+            child: const Icon(Icons.add_a_photo),
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FinalVerificationScreen(),
-                  ),
-                );
-              },style: ElevatedButton.styleFrom(
+                if (isEditing) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FinalVerificationScreen(),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
                 foregroundColor: AppColor.ternary,
-                backgroundColor: AppColor.primary
+                backgroundColor: AppColor.primary,
               ),
-              child: Text('Next'),
+              child:  Text(isEditing?"Save changes":"Next"),
             ),
           ),
         );
       },
+    );
+  }
+
+  // ✅ Confirm before deleting
+  void _confirmDelete(BuildContext context, int index, String url) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Image?"),
+        content: const Text("Are you sure you want to remove this image?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              // Remove from HotelImagesBloc
+              context.read<HotelImagesBloc>().add(DeleteHotelImage(index));
+              // Remove from HotelregistrationBloc
+              final hotelBloc = context.read<HotelregistrationBloc>();
+              final updatedList = List<String>.from(hotelBloc.state.hotelimages)
+                ..removeAt(index);
+              hotelBloc.add(UpdatedHotelImages(updatedList));
+              Navigator.pop(context);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
     );
   }
 }

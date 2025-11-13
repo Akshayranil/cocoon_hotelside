@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
+import 'package:cocoon_hotelside/view/authentication/screen_login.dart';
 import 'package:cocoon_hotelside/view/onboarding/screen_splash.dart';
 import 'package:cocoon_hotelside/view/profile/screen_help_and_support.dart';
 import 'package:cocoon_hotelside/view/profile/screen_privacy_policy.dart';
@@ -120,7 +121,7 @@ class ProfileScreen extends StatelessWidget {
                   if (isLogedout) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => SplashScreen()),
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   }
                 },

@@ -10,6 +10,7 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
   final TextEditingController contactcontroller;
   final TextEditingController emailcontroller;
   final TextEditingController pricecontroller;
+  final bool isEditing;
   const PropertyInformationBottomNavbar({
     super.key,
     required this.hotelcontroller,
@@ -17,6 +18,7 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
     required this.contactcontroller,
     required this.emailcontroller,
     required this.pricecontroller,
+    this.isEditing = false,
   });
 
   @override
@@ -57,18 +59,21 @@ class PropertyInformationBottomNavbar extends StatelessWidget {
           context.read<HotelregistrationBloc>().add(
             UpdatedPrice(pricecontroller.text),
           );
-
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ScreenPolicy()),
-          );
+          if (isEditing) {
+            Navigator.pop(context);
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ScreenPolicy()),
+            );
+          }
         },
 
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColor.primary,
           foregroundColor: AppColor.ternary,
         ),
-        child: Text('Next'),
+        child: Text(isEditing ? "Save changes" : "Next"),
       ),
     );
   }

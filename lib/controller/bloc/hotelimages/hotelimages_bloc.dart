@@ -14,6 +14,7 @@ class HotelImagesBloc extends Bloc<HotelImagesEvent, HotelImagesState> {
   HotelImagesBloc() : super(HotelImagesState()) {
     on<LoadHotelImages>(onLoadHotelImages);
     on<UploadHotelImages>(onUploadHotelImages);
+    on<DeleteHotelImage>(onDeleteHotelImage);
   }
 
   Future<void> onLoadHotelImages(
@@ -59,4 +60,23 @@ class HotelImagesBloc extends Bloc<HotelImagesEvent, HotelImagesState> {
 
     emit(state.copyWith(imageUrls: updatedImages, isLoading: false));
   }
+
+  Future<void> onDeleteHotelImage(
+      DeleteHotelImage event, Emitter<HotelImagesState> emit) async {
+    final updatedImages = List<String>.from(state.imageUrls);
+    if (event.index >= 0 && event.index < updatedImages.length) {
+      updatedImages.removeAt(event.index);
+
+      // Update Firestore
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance
+          .collection('hotelregistration')
+          .doc(uid)
+          .set({'images': updatedImages}, SetOptions(merge: true));
+
+      // Update state
+      emit(state.copyWith(imageUrls: updatedImages));
+    }
+  }
+
 }

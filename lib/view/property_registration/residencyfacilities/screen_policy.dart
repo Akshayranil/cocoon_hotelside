@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ScreenPolicy extends StatelessWidget {
+  final bool isEditing;
   final List<String> items = [
     "Free cancellation upto 24 hours",
     "Couple Friendly",
@@ -14,7 +15,7 @@ class ScreenPolicy extends StatelessWidget {
     "Free Wifi",
     "Swimming Pool/Gym/Spa",
   ];
-  ScreenPolicy({super.key});
+  ScreenPolicy({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class ScreenPolicy extends StatelessWidget {
               child: BlocBuilder<CheckboxBloc, CheckboxState>(
                 builder: (context, state) {
                   List<bool> checkedlist = [];
-                  if (state is CheckboxInitial) { 
+                  if (state is CheckboxInitial) {
                     checkedlist = state.ischecked;
                   } else if (state is Ischecked) {
                     checkedlist = state.ischecked;
@@ -68,40 +69,44 @@ class ScreenPolicy extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: ElevatedButton(
           onPressed: () {
-  // Get selected policies from CheckboxBloc
-  final state = context.read<CheckboxBloc>().state;
+            // Get selected policies from CheckboxBloc
+            final state = context.read<CheckboxBloc>().state;
 
-  List<String> selectedPolicies = [];
-  if (state is Ischecked) {
-    for (int i = 0; i < state.ischecked.length; i++) {
-      if (state.ischecked[i]) {
-        selectedPolicies.add(items[i]); // items[i] = policy text
-      }
-    }
-  }
-  if (selectedPolicies.isEmpty) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Please select at least one policy'),
-        backgroundColor: Colors.red,
-      ),
-    );
-    return; // Stop navigation
-  }
-  // Send to HotelregistrationBloc
-  context.read<HotelregistrationBloc>().add(UpdatedFacilities(selectedPolicies));
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => FinanceandPolicy()),
-  );
-}
-,
+            List<String> selectedPolicies = [];
+            if (state is Ischecked) {
+              for (int i = 0; i < state.ischecked.length; i++) {
+                if (state.ischecked[i]) {
+                  selectedPolicies.add(items[i]); // items[i] = policy text
+                }
+              }
+            }
+            if (selectedPolicies.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Please select at least one policy'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return; // Stop navigation
+            }
+            // Send to HotelregistrationBloc
+            context.read<HotelregistrationBloc>().add(
+              UpdatedFacilities(selectedPolicies),
+            );
+            if (isEditing) {
+              Navigator.pop(context);
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FinanceandPolicy()),
+              );
+            }
+          },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColor.primary,
             foregroundColor: AppColor.ternary,
           ),
-          child: Text('Next'),
+          child: Text(isEditing?"Save changes" : "Next"),
         ),
       ),
     );
