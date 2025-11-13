@@ -1,7 +1,9 @@
 import 'package:cocoon_hotelside/controller/bloc/auth/auth_bloc.dart';
 import 'package:cocoon_hotelside/utilities/custom_colors.dart';
 import 'package:cocoon_hotelside/utilities/custom_navbar.dart';
+import 'package:cocoon_hotelside/utilities/customnavigationscreen.dart';
 import 'package:cocoon_hotelside/utilities/reset_passwords.dart';
+import 'package:cocoon_hotelside/view/home/screen_home.dart';
 import 'package:cocoon_hotelside/view/property_registration/email_success/screen_registration.dart';
 import 'package:cocoon_hotelside/view/authentication/screen_signin.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -262,20 +264,37 @@ class LoginScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width * 0.95,
                       height: MediaQuery.of(context).size.width * 0.14,
                       child: SignInButton(
-                        Buttons.google,
-                        onPressed: () async {
-                          bool isLoged = await login();
+  Buttons.google,
+  onPressed: () async {
+    final googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return;
 
-                          if (isLoged) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegistrationScreen(),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+    );
+
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final user = userCredential.user!;
+    
+    bool exists = await hasHotelData(user.uid); // Firestore check
+
+    if (exists) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => CustomNavigationscreen(hotelId: user.uid)),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => RegistrationScreen()),
+      );
+    }
+  },
+),
+
                     ),
                   ),
                 ],
@@ -283,18 +302,31 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         },
-        listener: (context, state) {
-          if (state is AuthSuccess) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RegistrationScreen()),
-            );
-          } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Incorrect Email or Password')),
-            );
-          }
-        },
+       listener: (context, state) async {
+  if (state is AuthSuccess) {
+    final user = state.user; // get logged-in user
+    bool exists = await hasHotelData(user.uid); // check Firestore
+
+    if (exists) {
+      // Existing hotel → go to Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => CustomNavigationscreen(hotelId:user.uid ,)),
+      );
+    } else {
+      // First-time hotel → go to RegistrationScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => RegistrationScreen()),
+      );
+    }
+  } else if (state is AuthFailure) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(state.error)),
+    );
+  }
+}
+
       ),
     );
   }
